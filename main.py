@@ -94,7 +94,7 @@ class Button:
     
 #objects
 play_btn = Button(WIDTH / 2, HEIGHT / 2, play_normal_img, play_zoom_img)
-title_btn = Button(WIDTH / 2, 0 + title_normal_img.get_height() / 2, title_normal_img, title_zoom_img)
+title_btn = Button(WIDTH / 2, -10 + title_normal_img.get_height() / 2, title_normal_img, title_zoom_img)
 arrow_btn = Button(WIDTH / 2 - 150, HEIGHT / 2 + 200 , arrow_normal_img, arrow_zoom_img)
 
 buttons = [title_btn, play_btn, arrow_btn]
