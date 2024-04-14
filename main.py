@@ -7,21 +7,31 @@ from pygame import mixer
 pygame.init()
 mixer.init()
 
+
 # Load an image and scale it to fit the screen
-def load_image(img, SCREEN):
+def stretch_to_screen(img, SCREEN):
     size_img = img.get_size()
-    scale = min(
-        SCREEN.get_width() / size_img[0], SCREEN.get_height() / size_img[1]
-    )
+    scale = min(SCREEN.get_width() / size_img[0], SCREEN.get_height() / size_img[1])
     return pygame.transform.scale(
         img, (round(size_img[0] * scale), round(size_img[1] * scale))
     )
 
+
+def scale_img(img, scale):
+    return pygame.transform.scale(
+        img, (img.get_width() * scale, img.get_height() * scale)
+    )
+
+
 # load images
 backdrop_img = pygame.image.load(os.path.join("assets", "backgrounds", "backdrop.svg"))
-title_img = pygame.image.load(os.path.join("assets", "buttons", "title.svg"))
+title_img = pygame.image.load(os.path.join("assets", "buttons", "title.png"))
 play_img = pygame.image.load(os.path.join("assets", "buttons", "play.svg"))
-arrow_img = pygame.image.load(os.path.join("assets", "buttons", "arrow.svg"))
+arrow_img = pygame.image.load(os.path.join("assets", "buttons", "arrow.png"))
+
+title_img = scale_img(title_img, 0.5)
+arrow_img = scale_img(arrow_img, 0.12)
+
 
 # screen sizing
 SCALE = 2
@@ -34,7 +44,7 @@ pygame.display.set_caption("HOT CHOCOLATE v0.1 || A WARM AND FUZZY GAME")
 
 
 # lets re-load backdrop image scaled to screen
-backdrop_img = load_image(backdrop_img, SCREEN)
+backdrop_img = stretch_to_screen(backdrop_img, SCREEN)
 
 
 def title():
@@ -48,7 +58,7 @@ def title():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-                
+
         # draw screen
 
         SCREEN.blit(backdrop_img, (0, 0))
@@ -65,12 +75,11 @@ def title():
             arrow_img,
             (
                 WIDTH / 2 - arrow_img.get_width() / 2 - 100,
-                HEIGHT / 2 - arrow_img.get_height() / 2 + 100,
+                HEIGHT / 2 - arrow_img.get_height() / 2 + 200,
             ),
         )
 
         # check if play button pressed
-
 
         # update
         pygame.display.update()
