@@ -46,6 +46,9 @@ arrow_zoom_img = scale_img(arrow_img, 0.14)
 play_normal_img = scale_img(play_img, 0.21)
 play_zoom_img = scale_img(play_img, 0.25)
 
+#sfx and music loading
+hover = pygame.mixer.Sound(os.path.join("sfx", "Hover.wav"))
+
 # screen sizing
 SCALE = 2
 WIDTH = backdrop_img.get_width() * SCALE
@@ -70,7 +73,7 @@ class Button:
         self.img = img
         self.imgzoom = img_zoom
         self.useimg = self.img
-        
+        self.sound = False
         
         self.rect = pygame.rect.Rect(self.x - self.img.get_width() / 2, self.y - self.img.get_height() / 2, self.img.get_width(), self.img.get_height())
         self.hover = False
@@ -78,9 +81,12 @@ class Button:
     def draw(self):
         if self.hover:
             blit_centre(self.imgzoom, self.x, self.y, SCREEN)
+            if self.sound == False:
+                hover.play()
+            self.sound = True
         else:
             blit_centre(self.img, self.x, self.y, SCREEN)
-        
+            self.sound = False
         # pygame.draw.rect(SCREEN, (0, 0, 0), self.rect)
         
     def update(self):
