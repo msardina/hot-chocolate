@@ -34,7 +34,8 @@ def center2topright(img, centerx, centery, SCREEN):
     return newpos
     
 # load images
-player_img = pygame.image.load(os.path.join("assets", "players", "3p.svg"))
+player_str = f"{random.randint(1, 7)}p.svg"
+player_img = pygame.image.load(os.path.join("assets", "players", player_str))
 backdrop_img = pygame.image.load(os.path.join("assets", "backgrounds", "backdrop.svg"))
 title_img = pygame.image.load(os.path.join("assets", "buttons", "title.png"))
 play_img = pygame.image.load(os.path.join("assets", "buttons", "play.png"))
