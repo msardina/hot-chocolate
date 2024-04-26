@@ -27,12 +27,15 @@ def blit_centre(img, centerx, centery, SCREEN):
     newpos = (newx, newy)
     SCREEN.blit(img, (newpos))
     
-def center2topright(img, centerx, centery, SCREEN):
+def center2topright(img, centerx, centery):
     newx = centerx - img.get_width() / 2
     newy = centery - img.get_height() / 2
     newpos = (newx, newy)
     return newpos
-    
+
+def get_rect(img, x, y, width, height):
+    return pygame.Rect(center2topright(img, x, y)[0], center2topright(img, x, y)[1], width, height)
+
 # load images
 player_str = f"{random.randint(1, 7)}p.svg"
 player_img = pygame.image.load(os.path.join("assets", "players", player_str))
@@ -49,7 +52,7 @@ arrow_zoom_img = scale_img(arrow_img, 0.14)
 play_normal_img = scale_img(play_img, 0.21)
 play_zoom_img = scale_img(play_img, 0.25)
 player_img = scale_img(player_img, 1.3)
-droplet_img = scale_img(droplet_img, 1.3)
+droplet_img = scale_img(droplet_img, 2)
 
 #sfx and music loading
 hover = pygame.mixer.Sound(os.path.join("sfx", "Hover.wav"))
@@ -70,6 +73,7 @@ pygame.display.set_caption("HOT CHOCOLATE v0.1 || A WARM AND FUZZY GAME")
 backdrop_img = stretch_to_screen(backdrop_img, SCREEN)
 
 
+
 #class
 class Player:
     def __init__(self, x, y, img):
@@ -78,7 +82,7 @@ class Player:
         self.img = img
         self.width = self.img.get_width()
         self.height = self.img.get_height()
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.rect = get_rect(self.img, self.x, self.y, self.width, self.height)
         
     def draw(self):
         blit_centre(self.img, self.x, self.y, SCREEN)
@@ -87,7 +91,7 @@ class Player:
         pos = pygame.mouse.get_pos()
         self.y = 75
         self.x = pos[0]
-        
+        self.rect = get_rect(self.img, self.x, self.y, self.width, self.height)
 class Droplet:
     def __init__(self, x, y, img):
         self.x = x
@@ -95,16 +99,22 @@ class Droplet:
         self.img = img
         self.width = self.img.get_width()
         self.height = self.img.get_height()
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.rect = get_rect(self.img, self.x, self.y, self.width, self.height)
+        self.collide = False
         
     def draw(self):
         blit_centre(self.img, self.x, self.y, SCREEN)
-        
+
+    def reset(self):
+        self.y = HEIGHT - self.height
+        self.x = random.randint(0, WIDTH)
+
     def move(self):
         self.y -= 3
         if self.y < 0:
-            self.y = HEIGHT - self.height
-            self.x = random.randint(0, WIDTH)
+            self.reset()
+        self.rect = get_rect(self.img, self.x, self.y, self.width, self.height)
+    
 
 class Button:
     def __init__(self, x, y, img, img_zoom):
@@ -190,7 +200,8 @@ def game():
     
     
     run = True
-
+    score = 0
+    
     while run:
         # loop through all events
         for event in pygame.event.get():
@@ -209,6 +220,12 @@ def game():
         #move screen
         drop.move()
         player.move()
+        
+        #collisions
+        if pygame.Rect.colliderect(drop.rect, player.rect):
+            score += 50
+            print(score)
+            drop.reset()
             
         # update
         pygame.display.update()
