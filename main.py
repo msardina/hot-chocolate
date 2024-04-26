@@ -48,6 +48,8 @@ play_zoom_img = scale_img(play_img, 0.25)
 
 #sfx and music loading
 hover = pygame.mixer.Sound(os.path.join("sfx", "Hover.wav"))
+back_sfx = pygame.mixer.Sound(os.path.join("sfx", "music.mp3"))
+back_sfx.play(-1)
 
 # screen sizing
 SCALE = 2
@@ -74,7 +76,7 @@ class Button:
         self.imgzoom = img_zoom
         self.useimg = self.img
         self.sound = False
-        
+        self.click = False
         self.rect = pygame.rect.Rect(self.x - self.img.get_width() / 2, self.y - self.img.get_height() / 2, self.img.get_width(), self.img.get_height())
         self.hover = False
         
@@ -95,8 +97,18 @@ class Button:
         self.hover = False
         if self.rect.collidepoint(pos):
             self.hover = True
+            
+        # if hovering, check if press
+        if self.hover:            
+            # left button clicked
+            if pygame.mouse.get_pressed()[0] == 1 and self.click == False:
+                self.click = True
 
+            if pygame.mouse.get_pressed()[0] == 0:
+                self.click = False
 
+    def is_clicked(self):
+        return self.click
     
 #objects
 play_btn = Button(WIDTH / 2, HEIGHT / 2, play_normal_img, play_zoom_img)
@@ -106,9 +118,9 @@ arrow_btn = Button(WIDTH / 2 - 150, HEIGHT / 2 + 200 , arrow_normal_img, arrow_z
 buttons = [title_btn, play_btn, arrow_btn]
 
 def title():
-    run = True
+    title = True
 
-    while run:
+    while title:
         # loop through all events
         for event in pygame.event.get():
 
@@ -121,11 +133,14 @@ def title():
 
         SCREEN.blit(backdrop_img, (0, 0))
 
+        #loop through all buttons and update them and draw them.
         for btn in buttons:
             btn.update()
             btn.draw()
 
-        
+        if play_btn.is_clicked():
+            title = False
+            
         # update
         pygame.display.update()
 
