@@ -211,6 +211,7 @@ def game():
     run = True
     score = 0
     timer = 0
+    score_speed = 2
     
     while run:
         # loop through all events
@@ -248,7 +249,8 @@ def game():
         # update
         pygame.display.update()
         clock.tick(FPS)
-        timer += 0.50
+        timer += 1 / score_speed
+        
 # run game
 if __name__ == "__main__":
     title()
