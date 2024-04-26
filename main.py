@@ -40,6 +40,7 @@ backdrop_img = pygame.image.load(os.path.join("assets", "backgrounds", "backdrop
 title_img = pygame.image.load(os.path.join("assets", "buttons", "title.png"))
 play_img = pygame.image.load(os.path.join("assets", "buttons", "play.png"))
 arrow_img = pygame.image.load(os.path.join("assets", "buttons", "arrow.png"))
+droplet_img = pygame.image.load(os.path.join("assets", "objects", "drop.svg"))
 
 title_normal_img = scale_img(title_img, 0.5)
 title_zoom_img = scale_img(title_img, 0.56)
@@ -48,6 +49,7 @@ arrow_zoom_img = scale_img(arrow_img, 0.14)
 play_normal_img = scale_img(play_img, 0.21)
 play_zoom_img = scale_img(play_img, 0.25)
 player_img = scale_img(player_img, 1.3)
+droplet_img = scale_img(droplet_img, 1.3)
 
 #sfx and music loading
 hover = pygame.mixer.Sound(os.path.join("sfx", "Hover.wav"))
@@ -79,13 +81,31 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         
     def draw(self):
-        SCREEN.blit(self.img, (self.x, self.y))
+        blit_centre(self.img, self.x, self.y, SCREEN)
         
     def move(self):
         pos = pygame.mouse.get_pos()
-        self.y = 20
+        self.y = 75
         self.x = pos[0]
-        print(self.x)
+        
+class Droplet:
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.width = self.img.get_width()
+        self.height = self.img.get_height()
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        
+    def draw(self):
+        blit_centre(self.img, self.x, self.y, SCREEN)
+        
+    def move(self):
+        self.y -= 3
+        if self.y < 0:
+            self.y = HEIGHT - self.height
+            self.x = random.randint(0, WIDTH)
+
 class Button:
     def __init__(self, x, y, img, img_zoom):
         self.pos = (x, y)
@@ -134,6 +154,7 @@ play_btn = Button(WIDTH / 2, HEIGHT / 2, play_normal_img, play_zoom_img)
 title_btn = Button(WIDTH / 2, -10 + title_normal_img.get_height() / 2, title_normal_img, title_zoom_img)
 arrow_btn = Button(WIDTH / 2 - 150, HEIGHT / 2 + 200 , arrow_normal_img, arrow_zoom_img)
 player = Player(pygame.mouse.get_pos()[0], 20, player_img)
+drop = Droplet(WIDTH / 2, HEIGHT, droplet_img)
 buttons = [title_btn, play_btn, arrow_btn]
 
 def title():
@@ -183,9 +204,10 @@ def game():
 
         SCREEN.blit(backdrop_img, (0, 0))
         player.draw()
+        drop.draw()
         
         #move screen
-        
+        drop.move()
         player.move()
             
         # update
