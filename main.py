@@ -34,6 +34,7 @@ def center2topright(img, centerx, centery, SCREEN):
     return newpos
     
 # load images
+player_img = pygame.image.load(os.path.join("assets", "players", "3p.svg"))
 backdrop_img = pygame.image.load(os.path.join("assets", "backgrounds", "backdrop.svg"))
 title_img = pygame.image.load(os.path.join("assets", "buttons", "title.png"))
 play_img = pygame.image.load(os.path.join("assets", "buttons", "play.png"))
@@ -45,6 +46,7 @@ arrow_normal_img = scale_img(arrow_img, 0.12)
 arrow_zoom_img = scale_img(arrow_img, 0.14)
 play_normal_img = scale_img(play_img, 0.21)
 play_zoom_img = scale_img(play_img, 0.25)
+player_img = scale_img(player_img, 1.3)
 
 #sfx and music loading
 hover = pygame.mixer.Sound(os.path.join("sfx", "Hover.wav"))
@@ -66,7 +68,23 @@ backdrop_img = stretch_to_screen(backdrop_img, SCREEN)
 
 
 #class
-
+class Player:
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.width = self.img.get_width()
+        self.height = self.img.get_height()
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        
+    def draw(self):
+        SCREEN.blit(self.img, (self.x, self.y))
+        
+    def move(self):
+        pos = pygame.mouse.get_pos()
+        self.y = 20
+        self.x = pos[0]
+        print(self.x)
 class Button:
     def __init__(self, x, y, img, img_zoom):
         self.pos = (x, y)
@@ -114,7 +132,7 @@ class Button:
 play_btn = Button(WIDTH / 2, HEIGHT / 2, play_normal_img, play_zoom_img)
 title_btn = Button(WIDTH / 2, -10 + title_normal_img.get_height() / 2, title_normal_img, title_zoom_img)
 arrow_btn = Button(WIDTH / 2 - 150, HEIGHT / 2 + 200 , arrow_normal_img, arrow_zoom_img)
-
+player = Player(pygame.mouse.get_pos()[0], 20, player_img)
 buttons = [title_btn, play_btn, arrow_btn]
 
 def title():
@@ -143,8 +161,37 @@ def title():
             
         # update
         pygame.display.update()
+        
+def game():
+    #clear screen
+    SCREEN.fill('black')
+    
+    
+    run = True
+
+    while run:
+        # loop through all events
+        for event in pygame.event.get():
+
+            # if QUIT/X button pressed...
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        # draw screen
+
+        SCREEN.blit(backdrop_img, (0, 0))
+        player.draw()
+        
+        #move screen
+        
+        player.move()
+            
+        # update
+        pygame.display.update()
 
 
 # run game
 if __name__ == "__main__":
     title()
+    game()
