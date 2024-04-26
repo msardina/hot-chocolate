@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 import os
+import time
 from pygame import mixer
 
 pygame.init()
@@ -72,6 +73,11 @@ pygame.display.set_caption("HOT CHOCOLATE v0.1 || A WARM AND FUZZY GAME")
 # lets re-load backdrop image scaled to screen
 backdrop_img = stretch_to_screen(backdrop_img, SCREEN)
 
+#clock
+FPS = 60
+clock = pygame.time.Clock()
+
+
 #Setup Font
 font = pygame.font.SysFont(None, 50)
 title_font = pygame.font.SysFont(None, 100)
@@ -112,7 +118,7 @@ class Droplet:
         self.x = random.randint(0, WIDTH)
 
     def move(self):
-        self.y -= 3
+        self.y -= 5
         if self.y < 0:
             self.reset()
         self.rect = get_rect(self.img, self.x, self.y, self.width, self.height)
@@ -195,6 +201,7 @@ def title():
             
         # update
         pygame.display.update()
+        clock.tick(FPS)
         
 def game():
     #clear screen
@@ -203,6 +210,7 @@ def game():
     
     run = True
     score = 0
+    timer = 0
     
     while run:
         # loop through all events
@@ -222,6 +230,7 @@ def game():
         player.draw()
         drop.draw()
         SCREEN.blit(score_txt, (0, 0))
+        
         #move screen
         drop.move()
         player.move()
@@ -232,12 +241,14 @@ def game():
             print(score)
             drop.reset()
             
-
-        
+        #change score
+        if timer == 3:
+            score += 1
+            timer = 0
         # update
         pygame.display.update()
-
-
+        clock.tick(FPS)
+        timer += 0.50
 # run game
 if __name__ == "__main__":
     title()
