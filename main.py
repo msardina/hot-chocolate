@@ -72,7 +72,9 @@ pygame.display.set_caption("HOT CHOCOLATE v0.1 || A WARM AND FUZZY GAME")
 # lets re-load backdrop image scaled to screen
 backdrop_img = stretch_to_screen(backdrop_img, SCREEN)
 
-
+#Setup Font
+font = pygame.font.SysFont(None, 50)
+title_font = pygame.font.SysFont(None, 100)
 
 #class
 class Player:
@@ -210,13 +212,16 @@ def game():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
+                
+        #Render Text
+        score_txt = title_font.render(f'{score}', True, (0, 0, 0))
+        
         # draw screen
 
         SCREEN.blit(backdrop_img, (0, 0))
         player.draw()
         drop.draw()
-        
+        SCREEN.blit(score_txt, (0, 0))
         #move screen
         drop.move()
         player.move()
@@ -227,6 +232,8 @@ def game():
             print(score)
             drop.reset()
             
+
+        
         # update
         pygame.display.update()
 
