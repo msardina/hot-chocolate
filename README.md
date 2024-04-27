@@ -23,9 +23,9 @@ At the beginning of every round, you are allowed to choose which character you w
 
 ## Screnshots
 
-![sap1](snaphshots/playing.png)
+![sap1](snaphshots/playing.small.png)
 
-![sap2](snaphshots/title.png)
+![sap2](snaphshots/title.small.png)
 
 ## Credits
 
