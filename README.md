@@ -19,6 +19,11 @@ To score bonus points you can collect little hot chocolate drops (looks like wat
 
 At the beginning of every round, you are allowed to choose which character you want to be. There are marshmallows, hot cross buns, blue berries, straw berries and more. When you are ready to begin you can hit play with your cursor and begin the everlasting drop. Remember to have fun! 
 
+To run the game, simply type:
+
+```shell
+$ python main.py
+```
 
 
 ## Screnshots
